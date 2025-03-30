@@ -1,0 +1,20 @@
+spring:
+    application:
+        name: api-cards
+
+springdoc:
+    swagger-ui:
+        url: /openapi.yaml
+    api-docs:
+        enabled: true
+
+  # RABBITMQ
+rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    config:
+        queue: client_data
+        exchange: cards_exchange
+        routing-key: card_routing_key

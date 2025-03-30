@@ -1,0 +1,148 @@
+openapi: 3.0.0
+info:
+  title: Cards API
+  description: |-
+    This is a Exercise Hands-On Cards API
+  contact:
+    email: alexsilva.info@gmail.com
+  license:
+    name: Apache
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.12
+externalDocs:
+  description: Find out more about Swagger
+  url: https://swagger.io
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Cards API
+paths:
+  /cartoes/{id}:
+    get:
+      tags:
+        - cartoes
+      summary: Get Cards Offers
+      description: Get Card Offers.
+      operationId: getCardOffers
+      parameters:
+        - name: id
+          in: path
+          description: ID of Client Order
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCardsOffersResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    GetCardsOffersResponse:
+      type: object
+      properties:
+        numero_solicitacao:
+          type: string
+          example: '745f2812-c3f4-42ce-93fb-e119e643bda2'
+        data_solicitacao:
+          type: string
+          example: '2021-11-20T21:32:58.787'
+        cliente:
+          $ref: '#/components/schemas/Client'
+        cartoes_ofertados:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardsOffers'
+    Client:
+      required:
+        - nome
+        - cpf
+        - idade
+        - data_nascimento
+        - uf
+        - renda_mensal
+        - email
+        - telefone_whatsapp
+      type: object
+      properties:
+        nome:
+          type: string
+          example: Client Test
+        cpf:
+          type: string
+          example: '123.456.789-10'
+        idade:
+          type: integer
+          example: 25
+        data_nascimento:
+          type: string
+          format: date-time
+          example: 2000-01-01
+        uf:
+          type: string
+          example: SP
+        renda_mensal:
+          type: number
+          format: float
+          example: 4000.00
+        email:
+          type: string
+          example: cliente@teste.com
+        telefone_whatsapp:
+          type: string
+          example: 11999992020
+    CardsOffers:
+      type: object
+      properties:
+        tipo_cartao:
+          type: string
+          example: CARTAO_SEM_ANUIDADE
+        valor_anuidade_mensal:
+          type: number
+          format: float
+          example: 0.00
+        valor_limite_disponivel:
+          type: number
+          format: float
+          example: 1000.00
+        status:
+          type: string
+          example: APROVADO
+    Error:
+      type: object
+      properties:
+        codigo:
+          type: string
+          example: "500"
+        menssagem:
+          type: string
+          example: "Um erro inesperado ocorreu."
+        detalhe_erro:
+          $ref: '#/components/schemas/ErrorDetail'
+      required:
+        - codigo
+        - menssagem
+    ErrorDetail:
+      type: object
+      properties:
+        app:
+          type: string
+          example: "Nome do serviço"
+        tipo_erro:
+          type: string
+          example: "SERVICO_INDISPONIVEL"
+        mensagem_interna:
+          type: string
+          example: "Tivemos um problema, mas fique tranquilo que nosso time já foi avisado."
+      required:
+        - app
+        - tipo_erro
+        - mensagem_interna
