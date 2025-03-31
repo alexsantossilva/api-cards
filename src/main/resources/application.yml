@@ -1,6 +1,16 @@
 spring:
     application:
         name: api-cards
+    redis:
+        host: localhost
+        port: 6379
+        password:
+        timeout: 2000  # Timeout para conexões
+        lettuce:
+            pool:
+                max-active: 10  # Máximo de conexões ativas
+                max-idle: 5     # Máximo de conexões inativas
+                min-idle: 1     # Mínimo de conexões inativas
 
 springdoc:
     swagger-ui:

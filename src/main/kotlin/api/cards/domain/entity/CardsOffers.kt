@@ -1,4 +1,4 @@
-package api.client.domain.entity
+package api.cards.domain.entity
 
 import api.cards.domain.entity.vo.CartoesOfertados
 import api.cards.domain.entity.vo.Cliente

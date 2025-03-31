@@ -1,9 +1,10 @@
-package api.client.domain.ports.processor
+package api.cards.domain.ports.processor
 
-import api.client.domain.entity.CardsOffers
-import api.client.domain.entity.RetrieveClienteDataParams
+import api.cards.domain.entity.CardsOffers
+import api.cards.domain.entity.RetrieveClienteDataParams
 
 interface CardsOffersProcessorProvider {
+    fun getCardsOffers(retrieveClienteDataParams: RetrieveClienteDataParams): CardsOffers
 
-    fun getClientData(retrieveClienteDataParams: RetrieveClienteDataParams): CardsOffers
+    fun setCardsOffers(cardsOffers: CardsOffers)
 }
