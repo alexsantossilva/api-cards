@@ -4,12 +4,18 @@ import api.cards.domain.entity.CardsOffers
 import api.cards.domain.entity.RetrieveClienteDataParams
 import api.cards.domain.ports.processor.CardsOffersProcessorProvider
 import api.cards.infra.db.Db
+import api.cards.infra.mapper.CardsOffersMapper
 import com.google.gson.Gson
 
 class ProcessorProvider(
         private val db: Db): CardsOffersProcessorProvider {
     override fun getCardsOffers(retrieveClienteDataParams: RetrieveClienteDataParams): CardsOffers {
-        TODO("Not yet implemented")
+        val result = db.getValue(retrieveClienteDataParams.id.toString())
+        if (result == "NULL") {
+
+        }
+
+        return CardsOffersMapper.toCardsOffers(result.toString())
     }
 
     override fun setCardsOffers(cardsOffers: CardsOffers?, protocol: String) {

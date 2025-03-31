@@ -5,6 +5,7 @@ import api.cards.domain.entity.vo.Cliente
 import api.cards.domain.usecase.CardsOffersUseCase
 import api.cards.domain.usecase.impl.CardsOffersUseCaseImpl
 import api.cards.infra.dto.ClienteResponse
+import api.cards.infra.mapper.CardsOffersMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Service
@@ -15,7 +16,7 @@ class RabbitMQConsumer(private val cardsOffersUseCase: CardsOffersUseCase): Cons
     @RabbitListener(queues = ["\${rabbitmq.config.queue}"])
     fun receiveMessage(message: String) {
         println("Mensagem recebida: $message")
-        val clienteResponse = parseData(message)
+        val clienteResponse = CardsOffersMapper.toClienteResponse(message)
         val cliente = Cliente(
                 clienteResponse.nome,
                 clienteResponse.cpf,
@@ -32,10 +33,5 @@ class RabbitMQConsumer(private val cardsOffersUseCase: CardsOffersUseCase): Cons
                 clienteResponse.numeroSolicitacao,
                 clienteResponse.dataSolicitacao
         )
-    }
-
-    fun parseData(json: String): ClienteResponse {
-        val objectMapper = jacksonObjectMapper()
-        return objectMapper.readValue(json, ClienteResponse::class.java)
     }
 }
