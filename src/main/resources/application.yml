@@ -28,3 +28,6 @@ rabbitmq:
         queue: client_data
         exchange: cards_exchange
         routing-key: card_routing_key
+    error:
+        queue: error_client_data
+        routing-key: error_card_routing_key

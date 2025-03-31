@@ -3,6 +3,7 @@ package api.cards.domain.usecase.impl
 import api.cards.domain.entity.CardsOffers
 import api.cards.domain.entity.RetrieveClienteDataParams
 import api.cards.domain.entity.vo.Cliente
+import api.cards.domain.exception.CreditAnalysisException
 import api.cards.domain.ports.processor.CardsOffersProcessorProvider
 import api.cards.domain.strategy.impl.CardsStrategyImpl
 import api.cards.domain.usecase.CardsOffersUseCase
@@ -23,15 +24,11 @@ class CardsOffersUseCaseImpl(private val cardsOffersProcessorProvider: CardsOffe
         try {
             val dataNascimento = LocalDate.parse(cliente.data_nascimento)
 
-            if (!validateMajority(dataNascimento, majority)) {
-                throw IllegalArgumentException("A idade precisa ser maior ou igual a $majority")
+            if (cliente.idade < majority) {
+                throw CreditAnalysisException("A idade precisa ser maior ou igual a $majority", protocol)
             }
 
             val cardsOffersList = CardsStrategyImpl.getCardsOffers(cliente, dataNascimento)
-
-            if (cardsOffersList.isEmpty()) {
-                cardsOffersProcessorProvider.setCardsOffers(null, protocol)
-            }
 
             val cardsOffers = CardsOffers(
                     UUID.fromString(protocol),
@@ -42,15 +39,9 @@ class CardsOffersUseCaseImpl(private val cardsOffersProcessorProvider: CardsOffe
 
             cardsOffersProcessorProvider.setCardsOffers(cardsOffers, protocol)
         } catch (e: DateTimeParseException) {
-            throw IllegalArgumentException("Data de nascimento inválida: ${e.message}")
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(e.message)
+            throw CreditAnalysisException("Data de nascimento inválida: ${e.message}", protocol)
+        } catch (e: CreditAnalysisException) {
+            throw CreditAnalysisException(e.message.toString(), protocol)
         }
-    }
-
-    private fun validateMajority(dataNascimento: LocalDate, majority: Int): Boolean {
-        val now = LocalDate.now()
-        val age = ChronoUnit.YEARS.between(dataNascimento, now)
-        return age >= majority
     }
 }

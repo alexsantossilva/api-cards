@@ -5,6 +5,7 @@ import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.DirectExchange
 import org.springframework.amqp.core.Queue
+import org.springframework.amqp.core.TopicExchange
 import org.springframework.amqp.rabbit.annotation.EnableRabbit
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Value
@@ -23,6 +24,9 @@ class RabbitMQConfig(
     @Value("\${rabbitmq.config.queue}") private val queue: String,
     @Value("\${rabbitmq.config.exchange}") private val exchange: String,
     @Value("\${rabbitmq.config.routing-key}") private val routingKey: String,
+
+    @Value("\${rabbitmq.error.queue}") private val errorQueue: String,
+    @Value("\${rabbitmq.error.routing-key}") private val errorRoutingKey: String
 ) {
 
     @Bean
@@ -48,4 +52,12 @@ class RabbitMQConfig(
     fun binding(queue: Queue, exchange: DirectExchange): Binding {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey)
     }
+    @Bean
+    fun errorQueue(): Queue = Queue(errorQueue, true)
+
+    @Bean
+    fun errorBinding(): Binding {
+        return BindingBuilder.bind(errorQueue()).to(exchange()).with(errorRoutingKey)
+    }
+
 }
