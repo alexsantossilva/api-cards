@@ -6,5 +6,5 @@ import api.cards.domain.entity.RetrieveClienteDataParams
 interface CardsOffersProcessorProvider {
     fun getCardsOffers(retrieveClienteDataParams: RetrieveClienteDataParams): CardsOffers
 
-    fun setCardsOffers(cardsOffers: CardsOffers)
+    fun setCardsOffers(cardsOffers: CardsOffers?, protocol: String)
 }

@@ -8,5 +8,5 @@ interface CardsOffersUseCase {
 
     fun getCardsOffers(retrieveClienteDataParams: RetrieveClienteDataParams): CardsOffers
 
-    fun buildCardsOffers(cliente: Cliente, majority: Int, minimumWage: Double)
+    fun buildCardsOffers(cliente: Cliente, majority: Int, protocol: String, createdAt: String)
 }
