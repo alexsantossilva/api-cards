@@ -2,13 +2,11 @@ package api.cards.infra.consumer
 
 import api.cards.api.exception.ErrorDetail
 import api.cards.api.exception.ErrorResponse
-import api.cards.domain.entity.CardsOffers
 import api.cards.domain.entity.vo.Cliente
 import api.cards.domain.usecase.CardsOffersUseCase
 import api.cards.infra.db.RedisService
 import api.cards.infra.helper.ErrorHelper
 import api.cards.infra.mapper.CardsOffersMapper
-import com.google.gson.Gson
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Service
 
