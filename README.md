@@ -1,5 +1,5 @@
 
-## API Client (Desafio)
+## API Cards (Desafio)
 
 ### Requisitos para rodar o projeto
 
@@ -9,17 +9,18 @@
 4. [*RabbitMQ](https://www.rabbitmq.com/)
 4. [Gradle](https://gradle.org/install/)
 5. [Git (opcional).](https://git-scm.com/)
-   6[Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/download) ou [CURL](https://www.alura.com.br/artigos/curl-como-usar?srsltid=AfmBOoo6DhmK9UMwDHV8YKzA3ZqGfRIOrMw2uNfqPngxjAM4WFmiJjlL) (opcional).
+6. [Postman](https://www.postman.com/) - [Insomnia](https://insomnia.rest/download) - [CURL](https://www.alura.com.br/artigos/curl-como-usar?srsltid=AfmBOoo6DhmK9UMwDHV8YKzA3ZqGfRIOrMw2uNfqPngxjAM4WFmiJjlL) (opcional).
 
 ### Estrutura criada
 
 1. Criado duas API's na linguagem [Kotlin](https://kotlinlang.org/) com [Spring Boot](https://spring.io/guides/gs/spring-boot/)
 2. Adicionado Endpoints documentados com [Swagger](https://swagger.io/tools/swagger-ui/).
 3. Foi utilizado Arquitetura Hexagonal
-4. Adicionado filas para processar as ofertas de cartões baseados na regras do cliente.
+4. Adicionado filas para processar as ofertas de cartões com base dos dados dos Clientes.
 5. Foi utilizado o Docker para usar RabbitMQ e o REDIS. Na tabela abaixo está o repo para usar, se preferir.
-### Projetos no Github
+6. Criado fila para tratamento de Erros para dados incorretos (dlq).
 
+### Projetos no Github
 | Projeto    | Repositório                                     |
 |------------|-------------------------------------------------|
 | api-client | https://github.com/alexsantossilva/api-client   |
@@ -49,13 +50,13 @@ $ git clone https://github.com/alexsantossilva/api-client.git
 $ git clone https://github.com/alexsantossilva/api-cards.git
 ```
 
-3. Rodando os projetos:
+2. Rodando os projetos:
 ```
 $ ./gradlew build
 $ ./gradlew bootRun
 ```
 
-4. Acesse: http://localhost:8080/swagger-ui.html
+3. Acesse: http://localhost:8080/swagger-ui.html
 
 ### Desenho Solução
 
