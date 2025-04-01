@@ -8,10 +8,13 @@ import api.cards.infra.db.RedisService
 import api.cards.infra.helper.ErrorHelper
 import api.cards.infra.mapper.CardsOffersMapper
 import org.springframework.amqp.rabbit.annotation.RabbitListener
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 class RabbitMQConsumer(
+        @Value("\${cards.config.majority}") private val majority: Int,
+
         private val cardsOffersUseCase: CardsOffersUseCase,
         private val errorProducer: ErrorProducer,
         private val redisService: RedisService): Consumer {
@@ -33,7 +36,7 @@ class RabbitMQConsumer(
             )
             cardsOffersUseCase.buildCardsOffers(
                     cliente,
-                    18,
+                    majority,
                     clienteResponse.numeroSolicitacao,
                     clienteResponse.dataSolicitacao
             )

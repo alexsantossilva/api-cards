@@ -39,7 +39,7 @@ class CardsOffersUseCaseImpl(private val cardsOffersProcessorProvider: CardsOffe
 
             cardsOffersProcessorProvider.setCardsOffers(cardsOffers, protocol)
         } catch (e: DateTimeParseException) {
-            throw CreditAnalysisException("Data de nascimento inválida: ${e.message}", protocol)
+            throw IllegalArgumentException("Data de nascimento inválida: ${e.message}")
         } catch (e: CreditAnalysisException) {
             throw CreditAnalysisException(e.message.toString(), protocol)
         }

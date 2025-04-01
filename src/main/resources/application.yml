@@ -34,3 +34,7 @@ rabbitmq:
     error:
         queue: error_client_data
         routing-key: error_card_routing_key
+
+cards:
+    config:
+        majority: 18
