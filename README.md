@@ -1,5 +1,5 @@
 
-## API Client (Desafio)
+## API Cards (Desafio)
 
 ### Requisitos para rodar o projeto
 
@@ -9,7 +9,7 @@
 4. [*RabbitMQ](https://www.rabbitmq.com/)
 4. [Gradle](https://gradle.org/install/)
 5. [Git (opcional).](https://git-scm.com/)
-   6[Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/download) ou [CURL](https://www.alura.com.br/artigos/curl-como-usar?srsltid=AfmBOoo6DhmK9UMwDHV8YKzA3ZqGfRIOrMw2uNfqPngxjAM4WFmiJjlL) (opcional).
+6. [Postman](https://www.postman.com/) - [Insomnia](https://insomnia.rest/download) - [CURL](https://www.alura.com.br/artigos/curl-como-usar?srsltid=AfmBOoo6DhmK9UMwDHV8YKzA3ZqGfRIOrMw2uNfqPngxjAM4WFmiJjlL) (opcional).
 
 ### Estrutura criada
 
