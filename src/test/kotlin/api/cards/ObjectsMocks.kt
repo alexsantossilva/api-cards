@@ -1,6 +1,7 @@
 package api.cards
 
 import api.cards.domain.entity.CardsOffers
+import api.cards.domain.entity.enums.CardType
 import api.cards.domain.entity.vo.CartoesOfertados
 import api.cards.domain.entity.vo.Cliente
 import java.util.*
@@ -38,7 +39,7 @@ object ObjectsMocks {
         )
     }
 
-    fun mockMockCliente() = Cliente(
+    fun mockCliente() = Cliente(
            "Cliente Teste",
             "123.456.789-10",
             30,
@@ -50,9 +51,9 @@ object ObjectsMocks {
     )
 
     fun mockCartao() = CartoesOfertados(
-            "Cartão Sem Anuidade",
+            CardType.CARTAO_SEM_ANUIDADE.name,
             0.00,
-            5000.00,
+        CardType.CARTAO_SEM_ANUIDADE.getLimite(),
             "APROVADO"
     )
 }

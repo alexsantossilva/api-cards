@@ -1,101 +1,116 @@
 package api.cards.domain.usecase.impl
 
 import api.cards.ObjectsMocks
+import api.cards.domain.entity.CardsOffers
 import api.cards.domain.entity.RetrieveClienteDataParams
+import api.cards.domain.entity.vo.Cliente
 import api.cards.domain.exception.CreditAnalysisException
 import api.cards.domain.ports.processor.CardsOffersProcessorProvider
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import api.cards.domain.strategy.impl.CardsStrategyImpl
+import api.cards.domain.usecase.CardsOffersUseCase
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.mockito.*
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import java.time.format.DateTimeParseException
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mockito.*
+import org.mockito.junit.jupiter.MockitoExtension
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
-@Disabled
+@ExtendWith(MockitoExtension::class)
 class CardsOffersUseCaseImplTest {
 
-    @Mock
-    lateinit var cardsOffersProcessorProvider: CardsOffersProcessorProvider
+    private lateinit var cardsOffersProcessorProvider: CardsOffersProcessorProvider
+    private lateinit var cardsOffersUseCase: CardsOffersUseCase
 
-    @InjectMocks
-    lateinit var cardsOffersUseCaseImpl: CardsOffersUseCaseImpl
-
-    // Setup Mockito
     @BeforeEach
-    fun setup() {
-        MockitoAnnotations.openMocks(this)
+    fun setUp() {
+        cardsOffersProcessorProvider = mock(CardsOffersProcessorProvider::class.java)
+        cardsOffersUseCase = CardsOffersUseCaseImpl(cardsOffersProcessorProvider)
     }
 
     @Test
-    fun `test buildCardsOffers throws CreditAnalysisException if age is less than majority`() {
-        // Arrange
-        val client = ObjectsMocks.mockMockCliente()
-
-        val protocol = "745f2812-c3f4-42ce-93fb-e119e643bda2"
-        val majority = 18
-        val createdAt = "2025-03-31"
-
-        // Act & Assert
-        org.junit.jupiter.api.Assertions.assertThrows(CreditAnalysisException::class.java) {
-            cardsOffersUseCaseImpl.buildCardsOffers(client, majority, protocol, createdAt)
-        }
-    }
-
-    @Test
-    fun `test buildCardsOffers creates cardsOffers and calls setCardsOffers`() {
-        // Arrange
-        val client = ObjectsMocks.mockMockCliente()
-
-        val protocol = "745f2812-c3f4-42ce-93fb-e119e643bda2"
-        val majority = 18
-        val createdAt = "2025-03-31"
-
-        // Mock do CardsOffersProcessorProvider
-        val mockCardsOffersProcessorProvider = mock(CardsOffersProcessorProvider::class.java)
-
-        val cardsOffersUseCase = CardsOffersUseCaseImpl(mockCardsOffersProcessorProvider)
-
-        cardsOffersUseCase.buildCardsOffers(client, majority, protocol, createdAt)
-
-        Mockito.verify(mockCardsOffersProcessorProvider, Mockito.times(1))
-                .setCardsOffers(Mockito.any(), Mockito.eq(protocol))
-    }
-
-    @Test
-    fun `test buildCardsOffers throws CreditAnalysisException when DateTimeParseException occurs`() {
-        // Arrange
-        val client = ObjectsMocks.mockMockCliente()
-
-        val protocol = "745f2812-c3f4-42ce-93fb-e119e643bda2"
-        val majority = 18
-        val createdAt = "221-11-30"
-
-        // Act & Assert
-        assertThrows(DateTimeParseException::class.java) {
-            cardsOffersUseCaseImpl.buildCardsOffers(client, majority, protocol, createdAt)
-        }
-    }
-
-    @Test
-    fun `test getCardsOffers should return cardsOffers`() {
-        // Arrange
-        val retrieveClienteDataParams = RetrieveClienteDataParams(UUID.randomUUID())
+    fun `test getCardsOffers`() {
+        val retrieveClienteDataParams = RetrieveClienteDataParams(/* initialize with necessary parameters */)
         val expectedCardsOffers = ObjectsMocks.getMockCardsOffers()
 
-        val mockCardsOffersProcessorProvider = mock(CardsOffersProcessorProvider::class.java)
-        `when`(mockCardsOffersProcessorProvider.getCardsOffers(retrieveClienteDataParams))
-                .thenReturn(expectedCardsOffers)
+        `when`(cardsOffersProcessorProvider.getCardsOffers(retrieveClienteDataParams)).thenReturn(expectedCardsOffers)
 
-        val cardsOffersUseCase = CardsOffersUseCaseImpl(mockCardsOffersProcessorProvider)
+        val result = cardsOffersUseCase.getCardsOffers(retrieveClienteDataParams)
 
-        // Act
-        val actualCardsOffers = cardsOffersUseCase.getCardsOffers(retrieveClienteDataParams)
+        assertEquals(expectedCardsOffers, result)
+        verify(cardsOffersProcessorProvider, times(1)).getCardsOffers(retrieveClienteDataParams)
+    }
 
-        // Assert
-        assertEquals(expectedCardsOffers, actualCardsOffers)
+    @Test
+    fun `test buildCardsOffers with valid data`() {
+        val cliente = Cliente(
+            "Cliente Teste",
+            "123.456.789-10",
+            25,
+            "2000-01-01",
+            "SP",
+            2000.00,
+            "cliente@teste.com",
+            "11999992020"
+        )
+        val majority = 18
+        val protocol = UUID.randomUUID().toString()
+        val createdAt = LocalDateTime.now().toString()
+
+        val cardsOffersList = listOf(ObjectsMocks.mockCartao())
+
+        cardsOffersUseCase.buildCardsOffers(cliente, majority, protocol, createdAt)
+
+        val expectedCardsOffers = CardsOffers(UUID.fromString(protocol), createdAt, cliente, cardsOffersList)
+        verify(cardsOffersProcessorProvider, times(1)).setCardsOffers(expectedCardsOffers, protocol)
+    }
+
+    @Test
+    fun `test buildCardsOffers with underage client`() {
+        val cliente = Cliente(
+            "Cliente Teste",
+            "123.456.789-10",
+            16,
+            "1994-01-01",
+            "SP",
+            5000.00,
+            "cliente@teste.com",
+            "11999992020"
+        )
+        val majority = 18
+        val protocol = UUID.randomUUID().toString()
+        val createdAt = LocalDateTime.now().toString()
+
+        val exception = assertThrows(CreditAnalysisException::class.java) {
+            cardsOffersUseCase.buildCardsOffers(cliente, majority, protocol, createdAt)
+        }
+
+        assertEquals("A idade precisa ser maior ou igual a 18", exception.message)
+    }
+
+    @Test
+    fun `test buildCardsOffers with invalid date`() {
+        val cliente = Cliente(
+            "Cliente Teste",
+            "123.456.789-10",
+            20,
+            "invalid-date",
+            "SP",
+            5000.00,
+            "cliente@teste.com",
+            "11999992020"
+        )
+        val majority = 18
+        val protocol = UUID.randomUUID().toString()
+        val createdAt = LocalDate.now().toString()
+
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            cardsOffersUseCase.buildCardsOffers(cliente, majority, protocol, createdAt)
+        }
+
+        assertEquals("Data de nascimento inválida: Text 'invalid-date' could not be parsed at index 0", exception.message)
+
     }
 }

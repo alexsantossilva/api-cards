@@ -9,7 +9,6 @@ import api.cards.domain.strategy.impl.CardsStrategyImpl
 import api.cards.domain.usecase.CardsOffersUseCase
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 class CardsOffersUseCaseImpl(private val cardsOffersProcessorProvider: CardsOffersProcessorProvider) : CardsOffersUseCase {
