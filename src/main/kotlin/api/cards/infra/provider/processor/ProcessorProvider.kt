@@ -18,10 +18,16 @@ class ProcessorProvider(
         val result = db.getValue(retrieveClienteDataParams.id.toString())
 
         try {
+
+            if (result == null) {
+                throw CardsOffersNotFoundException("No Cards Offers")
+            }
+
             val cardsOffers = CardsOffersMapper.toCardsOffers(result.toString())
             if (cardsOffers.cartoes_ofertados.isEmpty()) {
                 throw CardsOffersNotFoundException("No Cards Offers")
             }
+
             return cardsOffers
         } catch (e: CreditAnalysisException) {
             throw CreditAnalysisException(e.message.toString(), retrieveClienteDataParams.id.toString())
