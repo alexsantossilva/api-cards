@@ -84,7 +84,7 @@ class CardsStrategyImplTest {
 
         val result = CardsStrategyImpl.getCardsOffers(cliente, LocalDate.parse(cliente.data_nascimento))
 
-        assertEquals(1, result.size, "Espera-se 2 cartões")
+        assertEquals(2, result.size, "Espera-se 2 cartões")
         assertEquals(CardType.CARTAO_DE_PARCEIROS.name, result[0].tipo_cartao, "Parceiros")
         assertEquals(CardType.CARTAO_SEM_ANUIDADE.name, result[1].tipo_cartao,"Sem Anuidade")
     }
